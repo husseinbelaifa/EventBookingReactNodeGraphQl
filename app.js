@@ -2,6 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const graphQlHttp=require('express-graphql')
 const {buildSchema}=require('graphql')
+const mongoose=require('mongoose')
+const Event=require('./models/event')
 
 const app = express();
 const events=[];
@@ -48,23 +50,32 @@ app.use('/graphql',graphQlHttp({
     `),
     rootValue:{
         events:()=>{
-            return events
+           return Event.find().then(events=>{
+               return events.map(event=>{
+                   return { ...event._doc }
+               })
+           }).catch(err=>{
+               throw err;
+           })
         },
         createEvent:(args)=>{
 
-            const event={
-                _id:Math.random().toString(),
+            const event=new Event({
+
                 title:args.eventInput.title,
                 description:args.eventInput.description,
                 price:+args.eventInput.price,
-                date:args.eventInput.date
+                date:new Date(args.eventInput.date)
+            })
 
-            }
-
-            events.push(event);
-
-           
-          return event;
+           return event.save().then(eventSaved=>{
+               console.log(eventSaved)
+               return {...eventSaved._doc}
+           }).catch(err=>{
+               console.log(err)
+               throw err
+            })
+         
            
 
         }
@@ -74,5 +85,10 @@ app.use('/graphql',graphQlHttp({
   
     
 }))
+
+mongoose.connect(`mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-3c0xg.mongodb.net/${process.env.MONGO_DB}?retryWrites=true&w=majority`
+)
+.then(()=>console.log('connect to mongo'))
+ .catch(err=>console.log(err))
 
 app.listen(3000, () => console.log("server is runnning"));
