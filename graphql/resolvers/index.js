@@ -14,7 +14,8 @@ module.exports = {
       .then(events => {
         return events.map(event => {
           return {
-            ...event._doc
+            ...event._doc,
+            date: new Date(event._doc.date).toISOString()
             // creator: user.bind(this, event._doc.creator)
           };
         });
@@ -52,7 +53,7 @@ module.exports = {
         return Event.findById(createdEvent._id)
           .populate({ path: "creator", populate: { path: "createdEvent" } })
           .then(eventFound => {
-            return eventFound;
+            return { ...eventFound, date: new Date(event.date).toISOString() };
           });
       })
       .catch(err => {
