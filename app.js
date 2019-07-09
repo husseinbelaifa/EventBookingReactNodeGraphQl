@@ -8,9 +8,35 @@ const User = require("./models/user");
 const bcrypt = require("bcryptjs");
 
 const app = express();
-const events = [];
 
 app.use(bodyParser.json());
+
+// const user = userId => {
+//   return User.findById(userId)
+//     .then(user => {
+
+//       return {
+//         ...user._doc,
+//         createdEvent: () => events(newUser)
+//       };
+//     })
+//     .catch(err => {
+//       throw err;
+//     });
+// };
+
+// const events = eventIds => {
+//   console.log(eventIds);
+//   return Event.find({ _id: { $in: eventIds } })
+//     .then(events => {
+//       return events.map(event => {
+//         return { ...event._doc, creator: user.bind(this, event._doc.creator) };
+//       });
+//     })
+//     .catch(err => {
+//       throw err;
+//     });
+// };
 
 app.use(
   "/graphql",
@@ -22,6 +48,7 @@ app.use(
         description:String! 
         price:Float! 
         date:String! 
+        creator:User!
 
 
     }
@@ -29,7 +56,8 @@ app.use(
     type User {
         _id:ID!
         email:String!
-        password:String
+        password:String,
+        createdEvent:[Event!]
     }
 
 
@@ -49,8 +77,7 @@ app.use(
   
     type RootQuery {
         events:[Event!]!
-        users:[User!]!
-
+       
     }
 
     type RootMutation{
@@ -68,9 +95,18 @@ app.use(
     rootValue: {
       events: () => {
         return Event.find()
+          .populate({
+            path: "creator",
+            populate: {
+              path: "createdEvent"
+            }
+          })
           .then(events => {
             return events.map(event => {
-              return { ...event._doc };
+              return {
+                ...event._doc
+                // creator: user.bind(this, event._doc.creator)
+              };
             });
           })
           .catch(err => {
@@ -98,12 +134,16 @@ app.use(
           })
           .then(user => {
             if (!user) throw new Error("User not found");
-            console.log(user);
+
             user.createdEvent.push(event);
             return user.save();
           })
           .then(userSaved => {
-            return createdEvent;
+            return Event.findById(createdEvent._id)
+              .populate({ path: "creator", populate: { path: "createdEvent" } })
+              .then(eventFound => {
+                return eventFound;
+              });
           })
           .catch(err => {
             console.log(err);
