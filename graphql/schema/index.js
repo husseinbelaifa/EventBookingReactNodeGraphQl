@@ -19,6 +19,14 @@ module.exports = buildSchema(`
         createdEvent:[Event!]
     }
 
+    type Booking{
+        _id:ID! 
+        event:Event! 
+        user:User! 
+        createdAt:String! 
+        updatedAt:String! 
+    }
+
 
     input EventInput {
         title:String!
@@ -36,6 +44,7 @@ module.exports = buildSchema(`
   
     type RootQuery {
         events:[Event!]!
+        bookings:[Booking!]! 
        
     }
 
@@ -43,6 +52,8 @@ module.exports = buildSchema(`
 
         createEvent(eventInput:EventInput):Event
         createUser(userInput:UserInput):User
+        bookEvent(eventId:ID!):Booking! 
+        cancelBooking(bookingId:ID!):Event!
 
     }
      schema {
