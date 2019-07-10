@@ -55,5 +55,8 @@ const events = async eventIds => {
 };
 
 exports.user = user;
+exports.transformBooking = transformBooking;
+exports.transformEvent = transformEvent;
+
 exports.events = events;
 exports.singleEvent = singleEvent;
