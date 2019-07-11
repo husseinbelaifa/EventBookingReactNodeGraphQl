@@ -4,15 +4,19 @@ import "./App.css";
 import authPage from "./pages/Auth";
 import eventPage from "./pages/Event";
 import bookingPage from "./pages/Booking";
+import MainNavigation from "./components/Navigation/MainNavigation";
 function App() {
   return (
     <BrowserRouter>
-      <Switch>
-        <Redirect from="/" to="/auth" exact />
-        <Route path="/auth" component={authPage} />
-        <Route path="/events" component={eventPage} />
-        <Route path="/bookings" component={bookingPage} />
-      </Switch>
+      <MainNavigation />
+      <main className="main-content">
+        <Switch>
+          <Redirect from="/" to="/auth" exact />
+          <Route path="/auth" component={authPage} />
+          <Route path="/events" component={eventPage} />
+          <Route path="/bookings" component={bookingPage} />
+        </Switch>
+      </main>
     </BrowserRouter>
   );
 }
