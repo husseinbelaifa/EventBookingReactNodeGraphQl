@@ -1,10 +1,14 @@
 // @flow
 import React from "react";
 import "./Auth.css";
+import AuthContext from "./context/auth-context";
 class Auth extends React.Component {
   state = {
     isLogin: true
   };
+
+  static contextType = AuthContext;
+
   constructor(props) {
     super(props);
 
@@ -71,6 +75,14 @@ class Auth extends React.Component {
         return res.json();
       })
       .then(resBody => {
+        if (resBody.data.login.token) {
+          this.context.login(
+            resBody.data.login.token,
+            resBody.data.login.userId,
+            resBody.data.login.tokenExpiration
+          );
+        }
+
         console.log(resBody);
       })
       .catch(err => {
