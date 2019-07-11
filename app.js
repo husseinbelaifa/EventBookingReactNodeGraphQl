@@ -34,4 +34,4 @@ mongoose
   .then(() => console.log("connect to mongo"))
   .catch(err => console.log(err));
 
-app.listen(3000, () => console.log("server is runnning"));
+app.listen(8000, () => console.log("server is runnning"));
