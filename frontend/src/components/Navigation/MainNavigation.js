@@ -1,9 +1,11 @@
-import React, { Component, useState } from "react";
+import React, { Component, useState, useContext } from "react";
 import { NavLink } from "react-router-dom";
 import "./MainNavigation.css";
 import AuthContext from "../../context/auth-context";
 
 const MainNavigation = ({ isAuth, logout }) => {
+  const context = useContext(AuthContext);
+  console.log(context);
   return (
     <header className="main-navigation">
       <div className="main-navigation__logo">
@@ -12,22 +14,22 @@ const MainNavigation = ({ isAuth, logout }) => {
 
       <nav className="main-navigation__items">
         <ul>
-          {!isAuth && (
+          {!context.token && (
             <li>
-              <NavLink to="/auth">Authenticate</NavLink>
+              <NavLink to="/auth">Authenticate </NavLink>
             </li>
           )}
           <li>
             <NavLink to="/events">Events</NavLink>
           </li>
-          {isAuth && (
+          {context.token && (
             <React.Fragment>
               <li>
                 <NavLink to="/bookings">Bookings</NavLink>
               </li>
 
               <li>
-                <button onClick={() => logout()}>Logout</button>
+                <button onClick={() => context.logout()}>Logout</button>
               </li>
             </React.Fragment>
           )}

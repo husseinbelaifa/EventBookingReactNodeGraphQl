@@ -26,10 +26,6 @@ class App extends React.Component {
   render() {
     return (
       <BrowserRouter>
-        <MainNavigation
-          isAuth={this.state.token ? true : null}
-          logout={this.logout}
-        />
         <AuthContext.Provider
           value={{
             token: this.state.token,
@@ -38,6 +34,11 @@ class App extends React.Component {
             logout: this.logout
           }}
         >
+          <MainNavigation
+            isAuth={this.state.token ? true : null}
+            logout={this.logout}
+          />
+
           <main className="main-content">
             <Switch>
               {!this.state.token && (
