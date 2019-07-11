@@ -1,38 +1,40 @@
-import React, { Component } from "react";
+import React, { Component, useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./MainNavigation.css";
 import AuthContext from "../../context/auth-context";
 
-const MainNavigation = props => (
-  <AuthContext.Consumer>
-    {context => {
-      return (
-        <header className="main-navigation">
-          <div className="main-navigation__logo">
-            <h1>EasyEvent</h1>
-          </div>
+const MainNavigation = ({ isAuth, logout }) => {
+  return (
+    <header className="main-navigation">
+      <div className="main-navigation__logo">
+        <h1>EasyEvent</h1>
+      </div>
 
-          <nav className="main-navigation__items">
-            <ul>
-              {context.token && (
-                <li>
-                  <NavLink to="/auth">Authenticate</NavLink>
-                </li>
-              )}
+      <nav className="main-navigation__items">
+        <ul>
+          {!isAuth && (
+            <li>
+              <NavLink to="/auth">Authenticate</NavLink>
+            </li>
+          )}
+          <li>
+            <NavLink to="/events">Events</NavLink>
+          </li>
+          {isAuth && (
+            <React.Fragment>
               <li>
-                <NavLink to="/events">Events</NavLink>
+                <NavLink to="/bookings">Bookings</NavLink>
               </li>
-              {context.token && (
-                <li>
-                  <NavLink to="/bookings">Bookings</NavLink>
-                </li>
-              )}
-            </ul>
-          </nav>
-        </header>
-      );
-    }}
-  </AuthContext.Consumer>
-);
+
+              <li>
+                <button onClick={() => logout()}>Logout</button>
+              </li>
+            </React.Fragment>
+          )}
+        </ul>
+      </nav>
+    </header>
+  );
+};
 
 export default MainNavigation;

@@ -2,7 +2,11 @@
 import React from "react";
 class Auth extends React.Component {
   render() {
-    return <h1>The Event Page</h1>;
+    return (
+      <div>
+        <button>CreateEvent</button>
+      </div>
+    );
   }
 }
 

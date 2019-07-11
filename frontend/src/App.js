@@ -12,15 +12,24 @@ class App extends React.Component {
     token: null,
     userId: null
   };
+
   login = (token, userId, tokenExpiration) => {
+    console.log("login");
     this.setState({ token: token, userId: userId });
+    console.log(this.state.token);
   };
 
-  logout = () => {};
+  logout = () => {
+    console.log("logout");
+    this.setState({ token: null, userId: null });
+  };
   render() {
     return (
       <BrowserRouter>
-        <MainNavigation />
+        <MainNavigation
+          isAuth={this.state.token ? true : null}
+          logout={this.logout}
+        />
         <AuthContext.Provider
           value={{
             token: this.state.token,
@@ -31,10 +40,19 @@ class App extends React.Component {
         >
           <main className="main-content">
             <Switch>
-              {!this.state.token && <Redirect from="/" to="/auth" exact />}
+              {!this.state.token && (
+                <Redirect from="/bookings" to="/auth" exact />
+              )}
+              {this.state.token && <Redirect from="/" to="/events" exact />}
+              {this.state.token && <Redirect from="/auth" to="/events" exact />}
+
               {!this.state.token && <Route path="/auth" component={authPage} />}
               <Route path="/events" component={eventPage} />
-              <Route path="/bookings" component={bookingPage} />
+              {this.state.token && (
+                <Route path="/bookings" component={bookingPage} />
+              )}
+
+              {!this.state.token && <Redirect to="/auth" exact />}
             </Switch>
           </main>
         </AuthContext.Provider>

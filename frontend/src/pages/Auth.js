@@ -1,7 +1,7 @@
 // @flow
 import React from "react";
 import "./Auth.css";
-import AuthContext from "./context/auth-context";
+import AuthContext from "../context/auth-context";
 class Auth extends React.Component {
   state = {
     isLogin: true
@@ -76,14 +76,16 @@ class Auth extends React.Component {
       })
       .then(resBody => {
         if (resBody.data.login.token) {
+          console.log("login");
           this.context.login(
             resBody.data.login.token,
             resBody.data.login.userId,
             resBody.data.login.tokenExpiration
           );
+          // console.log(resBody);
         }
 
-        console.log(resBody);
+        // console.log(this.context);
       })
       .catch(err => {
         console.log(err);
