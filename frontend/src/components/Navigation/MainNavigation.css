@@ -49,8 +49,10 @@
 
 .main-navigation__items a:hover,
 .main-navigation__items a:active,
-.main-navigation__items a.active .main-navigation__items button:hover,
-.main-navigation__items button:active {
+.main-navigation__items a.active,
+.main-navigation__items button:hover,
+.main-navigation__items button:active,
+.main-navigation__items button.active {
     background-color: #fff;
     color: #5101d1;
     border-radius: 5px;

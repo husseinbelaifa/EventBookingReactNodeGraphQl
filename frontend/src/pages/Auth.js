@@ -4,7 +4,8 @@ import "./Auth.css";
 import AuthContext from "../context/auth-context";
 class Auth extends React.Component {
   state = {
-    isLogin: true
+    isLogin: true,
+    errors: []
   };
 
   static contextType = AuthContext;
@@ -28,7 +29,9 @@ class Auth extends React.Component {
     const password = this.passwordEl.current.value;
 
     if (email.trim().length === 0 || password.trim().length === 0) {
-      return;
+      this.setState({
+        errors: [...this.state.errors, "username or password cannot be empty"]
+      });
     }
 
     //send request to backend
@@ -94,23 +97,73 @@ class Auth extends React.Component {
   render() {
     return (
       <form className="auth-form" onSubmit={this.submitHandler}>
-        <div className="form-control">
-          <label htmlFor="email">Email</label>
-          <input type="email" name="email" ref={this.emailEl} />
-        </div>
+        <div class="form-group">
+          <label for="exampleInputEmail1">Email address</label>
+          <input
+            type="email"
+            class="form-control"
+            id="exampleInputEmail1"
+            aria-describedby="emailHelp"
+            placeholder="Enter email"
+            ref={this.emailEl}
+          />
 
-        <div className="form-control">
-          <label htmlFor="password">Password</label>
-          <input type="password" name="password" ref={this.passwordEl} />
+          <small id="emailHelp" class="form-text text-muted">
+            We'll never share your email with anyone else.
+          </small>
+        </div>
+        <div class="form-group">
+          <label for="exampleInputPassword1">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="exampleInputPassword1"
+            placeholder="Password"
+            ref={this.passwordEl}
+          />
         </div>
 
         <div className="form-action">
-          <button type="button" onClick={this.switchModeHandler}>
+          <button
+            type="button"
+            class="btn btn-primary"
+            onClick={this.switchModeHandler}
+          >
             Switch To {this.state.isLogin ? "Sign Up" : "Login"}
           </button>
-          <button type="submit">Submit</button>
+          <button type="submit" class="btn btn-primary">
+            Submit
+          </button>
         </div>
       </form>
+      // <form className="auth-form" onSubmit={this.submitHandler}>
+      //   <div className="form-group form-control">
+      //     <label htmlFor="email">Email</label>
+      //     <input
+      //       type="email"
+      //       name="email"
+      //       className="form-control"
+      //       ref={this.emailEl}
+      //     />
+      //   </div>
+
+      //   <div className="form-group form-control">
+      //     <label htmlFor="password">Password</label>
+      //     <input
+      //       type="password"
+      //       name="password"
+      //       ref={this.passwordEl}
+      //       className="form-control"
+      //     />
+      //   </div>
+
+      //   <div className="form-action">
+      //     <button type="button" onClick={this.switchModeHandler}>
+      //       Switch To {this.state.isLogin ? "Sign Up" : "Login"}
+      //     </button>
+      //     <button type="submit">Submit</button>
+      //   </div>
+      // </form>
     );
   }
 }
