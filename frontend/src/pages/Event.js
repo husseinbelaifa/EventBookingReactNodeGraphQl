@@ -93,6 +93,7 @@ class Event extends React.Component {
       })
       .then(resData => {
         console.log(resData);
+        this.fetchEvents();
       })
       .catch(err => {
         console.log(err);
