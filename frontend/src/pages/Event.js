@@ -5,10 +5,12 @@ import Modal from "../components/Modal/Modal";
 import Backdrop from "../components/Backdrop/Backdrop";
 import AuthContext from "../context/auth-context";
 import EventList from "../components/Events/EventList/EventList";
+import Spinner from "../components/Spinner/Spinner";
 class Event extends React.Component {
   state = {
     creating: false,
-    events: []
+    events: [],
+    isLoading: false
   };
 
   static contextType = AuthContext;
@@ -120,6 +122,7 @@ class Event extends React.Component {
   };
 
   fetchEvents() {
+    this.setState({ isLoading: true });
     const requestBody = {
       query: `
         query {
@@ -152,10 +155,11 @@ class Event extends React.Component {
       })
       .then(resDate => {
         console.log(resDate.data.events);
-        this.setState({ events: resDate.data.events });
+        this.setState({ events: resDate.data.events, isLoading: false });
       })
       .catch(err => {
         console.log(err);
+        this.setState({ isLoading: false });
       });
   }
 
@@ -205,10 +209,14 @@ class Event extends React.Component {
           </div>
         )}
 
-        <EventList
-          events={this.state.events}
-          authUserId={this.context.userId}
-        />
+        {this.state.isLoading ? (
+          <Spinner />
+        ) : (
+          <EventList
+            events={this.state.events}
+            authUserId={this.context.userId}
+          />
+        )}
       </React.Fragment>
     );
   }
