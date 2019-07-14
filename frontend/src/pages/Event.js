@@ -10,7 +10,8 @@ class Event extends React.Component {
   state = {
     creating: false,
     events: [],
-    isLoading: false
+    isLoading: false,
+    selectedEvent: null
   };
 
   static contextType = AuthContext;
@@ -118,8 +119,10 @@ class Event extends React.Component {
   };
 
   modelCancelHandler = () => {
-    this.setState({ creating: false });
+    this.setState({ creating: false, selectedEvent: null });
   };
+
+  bookEventHandler = () => {};
 
   fetchEvents() {
     this.setState({ isLoading: true });
@@ -163,6 +166,15 @@ class Event extends React.Component {
       });
   }
 
+  showDetailEvent = eventId => {
+    console.log("event");
+    console.log(eventId);
+    this.setState(prevState => {
+      const selectedEvent = prevState.events.find(e => e._id === eventId);
+      return { selectedEvent: selectedEvent };
+    });
+  };
+
   render() {
     return (
       <React.Fragment>
@@ -200,6 +212,23 @@ class Event extends React.Component {
           </Modal>
         )}
 
+        {this.state.selectedEvent && (
+          <Modal
+            title="Event Detail"
+            canCancel
+            canConfirm
+            onCancel={this.modelCancelHandler}
+            onConfirm={this.bookEventHandler}
+          >
+            <h1>{this.state.selectedEvent.title}</h1>
+            <h2>
+              ${this.state.selectedEvent.price} -{" "}
+              {new Date(this.state.selectedEvent.date).toLocaleDateString()}
+            </h2>
+            <p>{this.state.selectedEvent.description}</p>
+          </Modal>
+        )}
+
         {this.context.token && (
           <div className="events-control">
             <p>Share your own Events</p>
@@ -215,6 +244,7 @@ class Event extends React.Component {
           <EventList
             events={this.state.events}
             authUserId={this.context.userId}
+            onViewDetail={this.showDetailEvent}
           />
         )}
       </React.Fragment>
