@@ -20,7 +20,6 @@ class App extends React.Component {
   };
 
   logout = () => {
-    console.log("logout");
     this.setState({ token: null, userId: null });
   };
   render() {
@@ -34,21 +33,18 @@ class App extends React.Component {
             logout: this.logout
           }}
         >
-          <MainNavigation
-            isAuth={this.state.token ? true : null}
-            logout={this.logout}
-          />
+          <MainNavigation />
 
           <main className="main-content">
             <Switch>
-              {!this.state.token && (
-                <Redirect from="/bookings" to="/auth" exact />
-              )}
               {this.state.token && <Redirect from="/" to="/events" exact />}
+
               {this.state.token && <Redirect from="/auth" to="/events" exact />}
 
               {!this.state.token && <Route path="/auth" component={authPage} />}
+
               <Route path="/events" component={eventPage} />
+
               {this.state.token && (
                 <Route path="/bookings" component={bookingPage} />
               )}

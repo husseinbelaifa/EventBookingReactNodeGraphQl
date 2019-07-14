@@ -2,6 +2,7 @@
 import React from "react";
 import "./Auth.css";
 import AuthContext from "../context/auth-context";
+
 class Auth extends React.Component {
   state = {
     isLogin: true,
@@ -85,8 +86,6 @@ class Auth extends React.Component {
             resBody.data.login.userId,
             resBody.data.login.tokenExpiration
           );
-
-          // console.log(resBody);
         }
 
         // console.log(this.context);
