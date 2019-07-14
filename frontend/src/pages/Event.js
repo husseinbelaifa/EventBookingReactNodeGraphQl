@@ -122,8 +122,6 @@ class Event extends React.Component {
     this.setState({ creating: false, selectedEvent: null });
   };
 
-  bookEventHandler = () => {};
-
   fetchEvents() {
     this.setState({ isLoading: true });
     const requestBody = {
@@ -157,7 +155,6 @@ class Event extends React.Component {
         return res.json();
       })
       .then(resDate => {
-        console.log(resDate.data.events);
         this.setState({ events: resDate.data.events, isLoading: false });
       })
       .catch(err => {
@@ -167,18 +164,55 @@ class Event extends React.Component {
   }
 
   showDetailEvent = eventId => {
-    console.log("event");
-    console.log(eventId);
     this.setState(prevState => {
       const selectedEvent = prevState.events.find(e => e._id === eventId);
       return { selectedEvent: selectedEvent };
     });
   };
 
+  bookEventHandler = () => {
+    if (!this.context.token) {
+      this.setState({ selectedEvent: null });
+      return;
+    }
+    console.log("selected Event");
+    const requestBody = {
+      query: `
+         mutation {
+           bookEvent(eventId:"${this.state.selectedEvent._id}"){
+             _id
+             createdAt
+             updatedAt
+           }
+         }
+      `
+    };
+    // const token = this.context.token;
+    console.log(this.context.token);
+    fetch("http://localhost:8000/graphql", {
+      method: "POST",
+      body: JSON.stringify(requestBody),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + this.context.token
+      }
+    })
+      .then(res => {
+        return res.json();
+      })
+      .then(resData => {
+        console.log(resData);
+        this.setState({ selectedEvent: null });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
   render() {
     return (
       <React.Fragment>
-        {this.state.creating && <Backdrop />}
+        {(this.state.creating || this.state.selectedEvent) && <Backdrop />}
         {this.state.creating && (
           <Modal
             title="Add Event"
@@ -186,6 +220,7 @@ class Event extends React.Component {
             canConfirm
             onCancel={this.modelCancelHandler}
             onConfirm={this.modelConfirmHandler}
+            confirmText="Confirm"
           >
             <form>
               <div className="form-control">
@@ -219,6 +254,7 @@ class Event extends React.Component {
             canConfirm
             onCancel={this.modelCancelHandler}
             onConfirm={this.bookEventHandler}
+            confirmText={this.context.token ? "Booking" : "Confirm"}
           >
             <h1>{this.state.selectedEvent.title}</h1>
             <h2>

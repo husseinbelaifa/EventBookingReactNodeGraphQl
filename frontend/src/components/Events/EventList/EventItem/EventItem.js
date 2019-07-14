@@ -2,7 +2,6 @@ import React from "react";
 import "./EventItem.css";
 
 const EventItem = props => {
-  console.log(props);
   return (
     <li key={props.eventId} className="events__list-item">
       <div>

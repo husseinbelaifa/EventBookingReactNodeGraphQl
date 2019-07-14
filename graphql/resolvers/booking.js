@@ -1,6 +1,6 @@
 const { dateToString } = require("../../helpers/date");
 const Booking = require("../../models/booking");
-
+const Event = require("../../models/event");
 const {
   singleEvent,
   user,
@@ -23,8 +23,11 @@ module.exports = {
   },
 
   bookEvent: async (args, req) => {
-    if (req.isAuth) throw new Error("Unauthetificate");
+    if (!req.isAuth) throw new Error("Unauthetificate");
+    console.log("args");
+    console.log(args);
     const fetchedEvent = await Event.findOne({ _id: args.eventId });
+    console.log("fetchedEvent");
 
     const booking = new Booking({
       user: req.userId,
