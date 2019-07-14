@@ -2,9 +2,21 @@ import React from "react";
 import "./EventItem.css";
 
 const EventItem = props => {
+  console.log(props);
   return (
     <li key={props.eventId} className="events__list-item">
-      {props.eventTitle}
+      <div>
+        <h1>{props.eventTitle}</h1>
+        <h2>$19.99</h2>
+      </div>
+
+      <div>
+        {props.userId === props.creator ? (
+          <p>Your the owner of this event.</p>
+        ) : (
+          <button className="btn">View Details</button>
+        )}
+      </div>
     </li>
   );
 };
