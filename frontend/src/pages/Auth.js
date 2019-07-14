@@ -97,42 +97,18 @@ class Auth extends React.Component {
   render() {
     return (
       <form className="auth-form" onSubmit={this.submitHandler}>
-        <div class="form-group">
-          <label for="exampleInputEmail1">Email address</label>
-          <input
-            type="email"
-            class="form-control"
-            id="exampleInputEmail1"
-            aria-describedby="emailHelp"
-            placeholder="Enter email"
-            ref={this.emailEl}
-          />
-
-          <small id="emailHelp" class="form-text text-muted">
-            We'll never share your email with anyone else.
-          </small>
+        <div className="form-control">
+          <label htmlFor="email">E-Mail</label>
+          <input type="email" id="email" ref={this.emailEl} />
         </div>
-        <div class="form-group">
-          <label for="exampleInputPassword1">Password</label>
-          <input
-            type="password"
-            class="form-control"
-            id="exampleInputPassword1"
-            placeholder="Password"
-            ref={this.passwordEl}
-          />
+        <div className="form-control">
+          <label htmlFor="password">Password</label>
+          <input type="password" id="password" ref={this.passwordEl} />
         </div>
-
-        <div className="form-action">
-          <button
-            type="button"
-            class="btn btn-primary"
-            onClick={this.switchModeHandler}
-          >
-            Switch To {this.state.isLogin ? "Sign Up" : "Login"}
-          </button>
-          <button type="submit" class="btn btn-primary">
-            Submit
+        <div className="form-actions">
+          <button type="submit">Submit</button>
+          <button type="button" onClick={this.switchModeHandler}>
+            Switch to {this.state.isLogin ? "Signup" : "Login"}
           </button>
         </div>
       </form>
