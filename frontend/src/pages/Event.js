@@ -14,6 +14,8 @@ class Event extends React.Component {
     selectedEvent: null
   };
 
+  isActive = true;
+
   static contextType = AuthContext;
 
   constructor(props) {
@@ -155,7 +157,8 @@ class Event extends React.Component {
         return res.json();
       })
       .then(resDate => {
-        this.setState({ events: resDate.data.events, isLoading: false });
+        if (this.isActive)
+          this.setState({ events: resDate.data.events, isLoading: false });
       })
       .catch(err => {
         console.log(err);
@@ -208,6 +211,10 @@ class Event extends React.Component {
         console.log(err);
       });
   };
+
+  componentWillUnmount() {
+    this.isActive = false;
+  }
 
   render() {
     return (
