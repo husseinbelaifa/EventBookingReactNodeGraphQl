@@ -53,11 +53,53 @@ class Booking extends React.Component {
       });
   }
 
+  deleteBookingHandler = bookingId => {
+    const requestBody = {
+      query: `
+        mutation {
+          cancelBooking(bookingId:"${bookingId}") {
+
+             _id
+             title
+
+          }
+        }
+      `
+    };
+
+    fetch("http://localhost:8000/graphql", {
+      method: "POST",
+      body: JSON.stringify(requestBody),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + this.context.token
+      }
+    })
+      .then(res => {
+        return res.json();
+      })
+      .then(resDate => {
+        this.setState(prevState => {
+          const updatedBookings = prevState.bookings.filter(
+            booking => bookingId !== booking._id
+          );
+
+          return { bookings: updatedBookings };
+        });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
   render() {
     return (
       <React.Fragment>
         {this.state.isLoading && <Spinner />}
-        <BookingsList bookings={this.state.bookings} />
+        <BookingsList
+          bookings={this.state.bookings}
+          onDelete={this.deleteBookingHandler}
+        />
       </React.Fragment>
     );
   }
